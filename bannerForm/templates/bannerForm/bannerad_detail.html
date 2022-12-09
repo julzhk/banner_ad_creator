@@ -1,0 +1,21 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    
+<p>
+    <a class="btn btn-light" href="{% url 'bannerForm_bannerAd_list' %}">
+    bannerAd Listing
+    </a>
+</p>
+    
+<table class="table">
+    <tr><td>websiteURL</td><td>{{ object.websiteURL }}</td></tr>
+    <tr><td>created</td><td>{{ object.created }}</td></tr>
+    <tr><td>last_updated</td><td>{{ object.last_updated }}</td></tr>
+    <tr><td>size</td><td>{{ object.size }}</td></tr>
+    <tr><td>emotion</td><td>{{ object.emotion }}</td></tr>
+</table>
+<a class="btn btn-primary" href="{{object.get_update_url}}">Edit</a>
+
+{% endblock %}
