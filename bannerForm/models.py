@@ -2,6 +2,8 @@ from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
 
+import bannerResult
+
 
 class bannerAd(models.Model):
     # Relationships
@@ -32,9 +34,6 @@ class bannerAd(models.Model):
     def get_htmx_delete_url(self):
         return reverse("bannerForm_bannerAd_htmx_delete", args=(self.pk,))
 
-    def save(self, *args, **kwargs):
-
-        super().save(*args, **kwargs)
 
 
 class Emotion(models.Model):
