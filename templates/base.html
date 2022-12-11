@@ -13,8 +13,8 @@
 <div class="relative overflow-hidden">
     <div class="bg-white pt-10 pb-14 sm:pt-16 lg:overflow-hidden lg:pt-24 lg:pb-24">
         <div class="mx-auto max-w-5xl lg:px-8">
-            <div class="lg:grid lg:grid-cols-2 lg:gap-8">
-                <div class="mx-auto max-w-md px-4 text-center sm:max-w-2xl sm:px-6 lg:flex lg:items-center lg:px-0 lg:text-left">
+            <div id="mainbody" class="lg:grid lg:grid-cols-2 lg:gap-8">
+                <div  class="mx-auto max-w-md px-4 text-center sm:max-w-2xl sm:px-6 lg:flex lg:items-center lg:px-0 lg:text-left">
                     <div class="lg:py-24">
                         <h1 class="mt-4 text-4xl font-bold tracking-tight text-black sm:mt-5 sm:text-6xl lg:mt-6 xl:text-6xl"><span class="block text-pink-500">
                             Automatic
@@ -25,13 +25,16 @@
                             We use the latest technology to create ads that will entice your visitors to visit.
                         </p>
                         <div class="mt-10 sm:mt-12">
-                            <form class="sm:mx-auto sm:max-w-xl lg:mx-0" action=".">
+                            <form hx-post="{% url 'process_submission' %}"
+                                  hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                                  hx-target="#mainbody"
+                                  class="sm:mx-auto sm:max-w-xl lg:mx-0">
                                 <div class="sm:flex">
                                     <div class="min-w-0 flex-1">
                                         <label for="url"
                                                class="sr-only">
                                             Website Homepage</label>
-                                        <input id="url" type="website"
+                                        <input id="url" type="url" name="url"
                                                placeholder="https://example.com"
                                                class="block w-full rounded-md border-0 bg-gray-200 px-4 py-3 text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400"
                                                value=""
@@ -55,16 +58,16 @@
         </div>
     </div>
 </div>
-{% block allcontent %}
-    <div id="content" class="container">
-        <h2>Home: <a href="{% url 'index' %}">adbuilder</a></h2>
-        <div class="card">
-            <div class="card-body">
-                <p class="card-text">{% block content %}{% endblock %}</p>
-            </div>
-        </div>
-    </div>
-{% endblock %}
+{#{% block allcontent %}#}
+{#    <div id="content" class="container">#}
+{#        <h2>Home: <a href="{% url 'index' %}">adbuilder</a></h2>#}
+{#        <div class="card">#}
+{#            <div class="card-body">#}
+{#                <p class="card-text">{% block content %}{% endblock %}</p>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#{% endblock %}#}
 
 <footer class="bg-white">
     <div class="mx-auto max-w-7xl overflow-hidden py-12 px-4 sm:px-6 lg:px-8">

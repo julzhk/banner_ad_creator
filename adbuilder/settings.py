@@ -56,9 +56,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_htmx.middleware.HtmxMiddleware',
     "django_browser_reload.middleware.BrowserReloadMiddleware",
-
 ]
-
 ROOT_URLCONF = 'adbuilder.urls'
 
 TEMPLATES = [
@@ -120,8 +118,9 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
-
+    # BASE_DIR / "static",
 ]
+MEDIA_URL = '/upload/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'upload')
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 django_heroku.settings(locals())
