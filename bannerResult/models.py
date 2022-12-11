@@ -1,5 +1,6 @@
 import replicate
 import requests
+from django.conf import settings
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 from django.db import models
@@ -12,7 +13,7 @@ class Result(models.Model):
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     image_src = models.URLField(blank=True)
-    image = models.ImageField(upload_to="upload/images/",
+    image = models.ImageField(upload_to="images/",
                               height_field=None,
                               width_field=None,
                               max_length=None,
@@ -27,6 +28,10 @@ class Result(models.Model):
 
     def __str__(self):
         return str(self.pk)
+
+    @property
+    def image_full_path(self):
+        return settings.BASE_DIR / self.image.name
 
     def get_absolute_url(self):
         return reverse("bannerResult_Result_detail", args=(self.pk,))
