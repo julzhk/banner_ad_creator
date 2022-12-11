@@ -8,6 +8,7 @@ https://docs.djangoproject.com/
 import os
 from pathlib import Path
 
+import dj_database_url
 import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -21,9 +22,9 @@ BASE_DIR_PATH = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = os.environ.get('SECRET_KEY', 'local_secret_key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*', 'localhost', ]
 TAILWIND_APP_NAME = 'theme'
 INTERNAL_IPS = ["127.0.0.1", ]
 
@@ -87,6 +88,21 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+db_from_env = dj_database_url.config(conn_max_age=600)
+DATABASES['default'].update(db_from_env)
+
+if os.environ.get('LOCAL_FONTS') == 'local':
+    FONTS = ['Optima', 'Sans', 'Serif', 'Arial', 'Helvetica',
+             'Times New Roman', 'Courier', 'Verdana', 'Georgia', 'Palatino',
+             'Garamond', 'Bookman', 'Trebuchet', 'Arial',
+             'Helvetica', 'Impact', 'Charcoal', 'Lucida', 'Console', 'Monaco', 'Andale Mono']
+else:
+    # for online: linux fonts
+    FONTS = ['DejaVuSansMono', 'URWGothic-BookOblique', 'URWGothic-Book', ]
+# fall back to turn off fonts & serve a default font
+if os.environ.get('DEFAULT_FONT') == 'default':
+    FONTS = ['Sans', ]
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

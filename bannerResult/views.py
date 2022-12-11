@@ -2,12 +2,14 @@ import asyncio
 import math
 import os
 import textwrap
+from random import choice
 
 import cairo
 import html_text
 import nest_asyncio
 import openai
 from asgiref.sync import sync_to_async
+from django.conf import settings
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views import generic
@@ -87,7 +89,7 @@ class BannerSvg:
         self.surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.WIDTH, self.HEIGHT)
         self.ctx = cairo.Context(self.surface)
         self.ctx.scale(self.WIDTH, self.HEIGHT)  # Normalizing the canvas
-
+        self.font = choice(settings.FONTS)
     def add_gradient(self):
         pat = cairo.LinearGradient(0.0, 0.0, 0.0, 1.0)
         pat.add_color_stop_rgba(1, 0.7, 0, 0, 0.5)  # First stop, 50% opacity
@@ -109,10 +111,11 @@ class BannerSvg:
 
     def write_text(self,
                    text="1Hello2Hello3Hello",
-                   red=0.6, green=0.1, blue=0.1,
+                   red=1, green=1, blue=0.5,
                    size=0.1,
                    x=0.075, y=0.75):
-        self.ctx.select_font_face("Sans",
+
+        self.ctx.select_font_face(self.font,
                                   cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
         self.ctx.set_font_size(size)
@@ -194,11 +197,11 @@ async def write_slogan(image_full_path: str, slogan: str):
     c = BannerSvg()
     c.add_background_img(fn=image_full_path)
     MAX_LINELENGTH = 25
-    SLOGAN_Y_START = 0.5  # the middle of the image, vertically
+    SLOGAN_Y_START = 0.65  # the middle of the image, vertically
     SLOGAN_Y_END = 0.95  # the end of the image, with a little padding
     slogan_lines = textwrap.wrap(slogan, MAX_LINELENGTH, break_long_words=False)
     no_of_lines = len(slogan_lines)
-    line_height = 0.07
+    line_height = 0.065
     for i, line in enumerate(slogan_lines):
         c.write_text(text=line,
                      y=SLOGAN_Y_START + i * line_height,
