@@ -8,7 +8,6 @@ from . import htmx
 
 router = routers.DefaultRouter()
 router.register("Result", api.ResultViewSet)
-
 urlpatterns = (
     path("api/v1/", include(router.urls)),
     path("bannerResult/Result/", views.ResultListView.as_view(), name="bannerResult_Result_list"),
