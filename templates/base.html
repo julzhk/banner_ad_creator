@@ -1,24 +1,92 @@
-{% load static %}
+{% load django_htmx static tailwind_tags %}
 <html>
-  <head>
+<head>
     <title>Django Builder - adbuilder</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    
+    <script src="{% static 'js/htmx.min.js' %}" defer></script>
+    {% django_htmx_script %}
+    {% tailwind_css %}
+    <script src="{% static 'js/alpine3.10.5.min.js' %}" defer></script>
     {% block extrahead %}{% endblock %}
-  </head>
-  <body>
-    {% block allcontent %}
-    <div id="content" class="container">
-      <h2>Home: <a href="{% url 'index' %}">adbuilder</a></h2>
-      <div class="card">
-        <div class="card-body">
-          
-          <p class="card-text">{% block content %}{% endblock %}</p>
+</head>
+<body>
+
+<div class="relative overflow-hidden">
+    <div class="bg-white pt-10 pb-14 sm:pt-16 lg:overflow-hidden lg:pt-24 lg:pb-24">
+        <div class="mx-auto max-w-5xl lg:px-8">
+            <div class="lg:grid lg:grid-cols-2 lg:gap-8">
+                <div class="mx-auto max-w-md px-4 text-center sm:max-w-2xl sm:px-6 lg:flex lg:items-center lg:px-0 lg:text-left">
+                    <div class="lg:py-24">
+                        <h1 class="mt-4 text-4xl font-bold tracking-tight text-black sm:mt-5 sm:text-6xl lg:mt-6 xl:text-6xl"><span class="block text-pink-500">
+                            Automatic
+                        </span><span
+                                class="block text-black">AI Banner Ads</span></h1>
+                        <p class="mt-3 text-base text-gray-400 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl">
+                            Boost your website traffic with our AI-created banner ads.
+                            We use the latest technology to create ads that will entice your visitors to visit.
+                        </p>
+                        <div class="mt-10 sm:mt-12">
+                            <form class="sm:mx-auto sm:max-w-xl lg:mx-0" action=".">
+                                <div class="sm:flex">
+                                    <div class="min-w-0 flex-1">
+                                        <label for="url"
+                                               class="sr-only">
+                                            Website Homepage</label>
+                                        <input id="url" type="website"
+                                               placeholder="https://example.com"
+                                               class="block w-full rounded-md border-0 bg-gray-200 px-4 py-3 text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                                               value=""
+                                               autocomplete="off"/>
+
+                                    </div>
+                                    {% include 'includes/mood_dropdown.html' %}
+                                    <div class="mt-3 sm:mt-0 sm:ml-3">
+                                        <button type="submit"
+                                                class="block w-full rounded-md bg-pink-500 py-3 px-4 font-medium text-white shadow hover:bg-pink-400 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2 focus:ring-offset-gray-900">
+                                            Generate Banner
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-12 hidden lg:block"><img src="{% static 'images/hero_phone.png' %}" alt="banner ads shown on an iphone"/></div>
+            </div>
         </div>
-      </div>
     </div>
-    
-    {% endblock %}
-  </body>
+</div>
+{% block allcontent %}
+    <div id="content" class="container">
+        <h2>Home: <a href="{% url 'index' %}">adbuilder</a></h2>
+        <div class="card">
+            <div class="card-body">
+                <p class="card-text">{% block content %}{% endblock %}</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+<footer class="bg-white">
+    <div class="mx-auto max-w-7xl overflow-hidden py-12 px-4 sm:px-6 lg:px-8">
+        <nav class="-mx-5 -my-2 flex flex-wrap justify-center" aria-label="Footer">
+            <div class="px-5 py-2"><a href="#" class="text-base text-gray-500 hover:text-gray-900">About</a></div>
+            <div class="px-5 py-2"><a href="#" class="text-base text-gray-500 hover:text-gray-900">Legal & Privacy</a></div>
+        </nav>
+        <div class="mt-8 flex justify-center space-x-6">
+            <a href="https://github.com/julzhk/banner_ad_creator" class="text-gray-400 hover:text-gray-500"
+            ><span class="sr-only">GitHub</span>
+                <svg fill="currentColor" viewBox="0 0 24 24" class="h-6 w-6" aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                          clip-rule="evenodd"></path>
+                </svg
+                >
+            </a>
+        </div>
+        <p class="mt-8 text-center text-base text-gray-300">&copy; Use at your own risk; No Express or Implied Warranty. For educational purposes only.</p>
+    </div>
+</footer>
+
+
+</body>
 </html>

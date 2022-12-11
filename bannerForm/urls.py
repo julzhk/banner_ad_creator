@@ -11,6 +11,7 @@ router.register("bannerAd", api.bannerAdViewSet)
 router.register("Emotion", api.EmotionViewSet)
 
 urlpatterns = (
+    path("__reload__/", include("django_browser_reload.urls")),
     path("api/v1/", include(router.urls)),
     path("bannerForm/bannerAd/", views.bannerAdListView.as_view(), name="bannerForm_bannerAd_list"),
     path("bannerForm/bannerAd/create/", views.bannerAdCreateView.as_view(), name="bannerForm_bannerAd_create"),
