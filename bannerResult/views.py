@@ -132,13 +132,12 @@ class BannerSvg:
 
 
 async def process_submission(request):
-    url = request.POST.get("url", 'https://www.python.org/')
-    slogan = 'One must realize the believer in order to receive the explosion of the harmony of superior fear. 1awesome slogan awaits 2awesome slogan awaits 3awesome slogan awaits'
+    url = request.POST.get("url", '')
     result = await sync_to_async(Result.objects.last, thread_sensitive=True)()
     banner = await sync_to_async(bannerAd.objects.last, thread_sensitive=True)()
-
-    # webpage_content = await get_website_contents(url)
-    # banner, result, slogan = await write_data(result, slogan, url, webpage_content)
+    slogan = get_slogan(banner.webpage_raw_content)
+    webpage_content = await get_website_contents(url)
+    banner, result= await write_data(result, url, webpage_content)
     await write_slogan(result.image_full_path, slogan)
     return render(request,
                   context={'slogan': slogan,
@@ -147,11 +146,10 @@ async def process_submission(request):
                   template_name="bannerResult/process_submission.html")
 
 
-async def write_data(result, slogan, url, webpage_content):
+async def write_data(result, url, webpage_content):
     banner = await sync_to_async(bannerAd.objects.create, thread_sensitive=True)(websiteURL=url, webpage_raw_content=webpage_content)
     result = await sync_to_async(Result.objects.create, thread_sensitive=True)(banner=banner)
-
-    return banner, result, slogan
+    return banner, result
 
 
 async def get_website_contents(url):
