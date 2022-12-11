@@ -89,7 +89,7 @@ class BannerSvg:
         self.surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.WIDTH, self.HEIGHT)
         self.ctx = cairo.Context(self.surface)
         self.ctx.scale(self.WIDTH, self.HEIGHT)  # Normalizing the canvas
-        self.font = choice(settings.FONTS)
+        self.font = "Sans"
     def add_gradient(self):
         pat = cairo.LinearGradient(0.0, 0.0, 0.0, 1.0)
         pat.add_color_stop_rgba(1, 0.7, 0, 0, 0.5)  # First stop, 50% opacity
