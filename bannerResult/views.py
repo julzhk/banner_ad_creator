@@ -132,13 +132,21 @@ class BannerSvg:
 
 
 async def process_submission(request):
+    # result = await sync_to_async(Result.objects.last, thread_sensitive=True)()
+    # banner = await sync_to_async(bannerAd.objects.last, thread_sensitive=True)()
+    # return render(request,
+    #               context={'slogan': 'test slogan',
+    #                        'banner': banner,
+    #                        'result': result},
+    #               template_name="bannerResult/process_submission.html")
+
     url = request.POST.get("url", '')
-    result = await sync_to_async(Result.objects.last, thread_sensitive=True)()
-    banner = await sync_to_async(bannerAd.objects.last, thread_sensitive=True)()
     slogan = get_slogan(banner.webpage_raw_content)
     webpage_content = await get_website_contents(url)
-    banner, result= await write_data(result, url, webpage_content)
+    banner, result = await write_data(result, url, webpage_content)
     await write_slogan(result.image_full_path, slogan)
+
+
     return render(request,
                   context={'slogan': slogan,
                            'banner': banner,
