@@ -63,7 +63,7 @@ def get_slogan(msg):
     openai.api_key = os.getenv("OPENAI_API_KEY")
     response = openai.Completion.create(
         model="text-davinci-003",
-        prompt=f'turn this into a slogan: {msg}',
+        prompt=f'turn this into a slogan: {msg}'[:settings.MAX_CONTENT_LENGTH],
         temperature=0.7,
         max_tokens=64,
         top_p=1,
@@ -185,7 +185,7 @@ async def get_website_contents(url):
         nest_asyncio.apply()
     asyncio.set_event_loop(new_loop)
     webpage_content = new_loop.run_until_complete(get_url_page_contents(url=url))
-    return webpage_content
+    return webpage_content[:settings.MAX_CONTENT_LENGTH]
 
 
 async def generate_image(result, slogan):
