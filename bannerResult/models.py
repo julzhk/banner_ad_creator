@@ -1,4 +1,4 @@
-import os
+from random import choice
 
 import replicate
 import requests
@@ -60,6 +60,13 @@ class Result(models.Model):
     def generate(self, slogan):
         model = replicate.models.get("stability-ai/stable-diffusion")
         version = model.versions.get("27b93a2413e7f36cd83da926f3656280b2931564ff050bf9575f1fdf9bcd7478")
-        self.image_src = version.predict(prompt=f"mdjrny-v4 style banner advert for the concept of: {slogan} showing no words and without text")[0]
+        prompts = [
+            f"glossy photo-montage interesting palette on the concept of: {slogan}",
+            f"mdjrny-v4 style banner advert for the concept of: {slogan} showing no words and without text"
+            f"sophisticated illustration on the concept of: {slogan} showing just pictures and without text"
+            f"abstract commercial illustration on the concept of: {slogan} showing just pictures and without text"
+        ]
+        prompt = choice(prompts)
+        self.image_src = version.predict(prompt=prompt)[0]
         self.save_image_from_url(self.image_src)
         self.save()
