@@ -8,8 +8,8 @@ import html_text
 import nest_asyncio
 import openai
 from asgiref.sync import sync_to_async
-from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.shortcuts import redirect, render
+from django.urls import reverse, reverse_lazy
 from django.views import generic
 from requests_html import AsyncHTMLSession
 
@@ -78,8 +78,6 @@ def clean_up(txt):
     return txt
 
 
-def generate_image(slogan: str):
-    pass
 
 
 class BannerSvg:
@@ -131,22 +129,29 @@ class BannerSvg:
         self.ctx.scale(self.WIDTH, self.HEIGHT)
 
 
+def home(request, error=''):
+    error = request.GET.get('error', error)
+    url = request.GET.get('url', 'https://www.example.com')
+    if error:
+        error = 'Please enter a valid URL'
+    moods = ['edgy', 'happy', 'cyber', 'sunny', 'sophisticated', 'dark']
+    template_name = "index_partial.html" if request.htmx else "index.html"
+    return render(request,
+                  context={'moods': moods,
+                           'error': error,
+                           'url': url},
+                  template_name=template_name)
+
+
 async def process_submission(request):
-    # result = await sync_to_async(Result.objects.last, thread_sensitive=True)()
-    # banner = await sync_to_async(bannerAd.objects.last, thread_sensitive=True)()
-    # return render(request,
-    #               context={'slogan': 'test slogan',
-    #                        'banner': banner,
-    #                        'result': result},
-    #               template_name="bannerResult/process_submission.html")
-
     url = request.POST.get("url", '')
-    slogan = get_slogan(banner.webpage_raw_content)
+    if not url:
+        return redirect(reverse('index') + '?error=1&url=' + url)
     webpage_content = await get_website_contents(url)
-    banner, result = await write_data(result, url, webpage_content)
+    banner, result = await write_data(url, webpage_content)
+    slogan = get_slogan(banner.webpage_raw_content)
+    await generate_image(result, slogan)
     await write_slogan(result.image_full_path, slogan)
-
-
     return render(request,
                   context={'slogan': slogan,
                            'banner': banner,
@@ -154,7 +159,18 @@ async def process_submission(request):
                   template_name="bannerResult/process_submission.html")
 
 
-async def write_data(result, url, webpage_content):
+async def debug_process(request):
+    # mock processing view
+    result = await sync_to_async(Result.objects.last, thread_sensitive=True)()
+    banner = await sync_to_async(bannerAd.objects.last, thread_sensitive=True)()
+    return render(request,
+                  context={'slogan': 'test slogan',
+                           'banner': banner,
+                           'result': result},
+                  template_name="bannerResult/process_submission.html")
+
+
+async def write_data(url, webpage_content):
     banner = await sync_to_async(bannerAd.objects.create, thread_sensitive=True)(websiteURL=url, webpage_raw_content=webpage_content)
     result = await sync_to_async(Result.objects.create, thread_sensitive=True)(banner=banner)
     return banner, result
@@ -169,8 +185,7 @@ async def get_website_contents(url):
     return webpage_content
 
 
-async def write_slogan_to_results(result, slogan, webpage_content):
-    slogan = get_slogan(webpage_content)
+async def generate_image(result, slogan):
     await sync_to_async(Result.generate, thread_sensitive=True)(result, slogan=slogan)
     return slogan
 

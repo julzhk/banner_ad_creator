@@ -1,3 +1,5 @@
+import os
+
 import replicate
 import requests
 from django.conf import settings
@@ -31,7 +33,7 @@ class Result(models.Model):
 
     @property
     def image_full_path(self):
-        return settings.BASE_DIR / self.image.name
+        return f'{settings.BASE_DIR_PATH}{settings.MEDIA_URL}{self.image.name}'
 
     def get_absolute_url(self):
         return reverse("bannerResult_Result_detail", args=(self.pk,))

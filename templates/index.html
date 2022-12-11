@@ -1,14 +1,1 @@
 {% extends "base.html" %}
-{% block content %}
-<div class="m-2"><h4>bannerForm</h4></div>
-<div class="m-2"><a class="btn btn-light" href="{% url 'bannerForm_bannerAd_list' %}">bannerAd Listing</a></div>
-<div class="m-2"><h4>bannerResult</h4></div>
-<div class="m-2"><a class="btn btn-light" href="{% url 'bannerResult_Result_list' %}">Result Listing</a></div>
-<div class='container'>
-<div class='card'>
-<div class='card-body'>
-<div><a href="{% url 'htmx' %}">HTMX UI</a></div>
-</div>
-</div>
-</div>
-{% endblock %}
